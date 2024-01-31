@@ -55,7 +55,7 @@ download_release() {
 	*) fail "Unsupported platform" ;;
 	esac
 
-	url="$GH_REPO/releases/download/libsql-server-v${version}/libsql-server-${architecture}-${platform}.tar.xz"
+	url="$GH_REPO/releases/download/${version}/libsql-server-${architecture}-${platform}.tar.xz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
