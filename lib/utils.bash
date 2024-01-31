@@ -27,7 +27,8 @@ sort_versions() {
 list_github_tags() {
 	git ls-remote --tags --refs "$GH_REPO" |
 		grep -o 'refs/tags/.*' | cut -d/ -f3- |
-		sed 's/^v//' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+		grep '^libsql-server-v' |
+		sed 's/^libsql-server-//' # NOTE: You might want to adapt this sed to remove non-version strings from tags
 }
 
 list_all_versions() {
@@ -55,7 +56,7 @@ download_release() {
 	*) fail "Unsupported platform" ;;
 	esac
 
-	url="$GH_REPO/releases/download/${version}/libsql-server-${architecture}-${platform}.tar.xz"
+	url="$GH_REPO/releases/download/libsql-server-v${version}/libsql-server-${architecture}-${platform}.tar.xz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
