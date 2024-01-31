@@ -36,15 +36,6 @@ list_all_versions() {
 	list_github_tags
 }
 
-get_platform() {
-  uname | tr '[:upper:]' '[:lower:]'
-}
-
-get_arch() {
-  uname -m
-}
-
-
 download_release() {
 	local version filename url
 	version="$1"
@@ -63,8 +54,7 @@ download_release() {
 	linux*) platform="unknown-linux-gnu" ;;
 	*) fail "Unsupported platform" ;;
 	esac
-	
-	# https://github.com/tursodatabase/libsql/releases/download/libsql-server-v0.22.16/libsql-server-aarch64-apple-darwin.tar.xz
+
 	url="$GH_REPO/releases/download/libsql-server-v${version}/libsql-server-${architecture}-${platform}.tar.xz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
