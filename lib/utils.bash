@@ -41,8 +41,21 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for libsql-server
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	local platform
+	case "$OSTYPE" in
+		darwin*) platform="apple-darwin" ;;
+		linux*) platform="unknown-linux-gnu" ;;
+		*) fail "Unsupported platform" ;;
+	esac
+
+	local architecture
+	case "$(uname -m)" in
+		x86_64 | x86-64 | x64 | amd64) architecture="x86_64" ;;
+		aarch64 | arm64) architecture="aarch64" ;;
+		*) fail "Unsupported architecture" ;;
+	esac
+
+	url="$GH_REPO/releases/download/libsql-server-v${version}-${platform}-${platform}.tar.xz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
