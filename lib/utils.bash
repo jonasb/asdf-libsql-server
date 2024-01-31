@@ -36,26 +36,36 @@ list_all_versions() {
 	list_github_tags
 }
 
+get_platform() {
+  uname | tr '[:upper:]' '[:lower:]'
+}
+
+get_arch() {
+  uname -m
+}
+
+
 download_release() {
 	local version filename url
 	version="$1"
 	filename="$2"
 
-	local platform
-	case "$OSTYPE" in
-		darwin*) platform="apple-darwin" ;;
-		linux*) platform="unknown-linux-gnu" ;;
-		*) fail "Unsupported platform" ;;
-	esac
-
 	local architecture
 	case "$(uname -m)" in
-		x86_64 | x86-64 | x64 | amd64) architecture="x86_64" ;;
-		aarch64 | arm64) architecture="aarch64" ;;
-		*) fail "Unsupported architecture" ;;
+	x86_64 | x86-64 | x64 | amd64) architecture="x86_64" ;;
+	aarch64 | arm64) architecture="aarch64" ;;
+	*) fail "Unsupported architecture" ;;
 	esac
 
-	url="$GH_REPO/releases/download/libsql-server-v${version}-${platform}-${platform}.tar.xz"
+	local platform
+	case "$OSTYPE" in
+	darwin*) platform="apple-darwin" ;;
+	linux*) platform="unknown-linux-gnu" ;;
+	*) fail "Unsupported platform" ;;
+	esac
+	
+	# https://github.com/tursodatabase/libsql/releases/download/libsql-server-v0.22.16/libsql-server-aarch64-apple-darwin.tar.xz
+	url="$GH_REPO/releases/download/libsql-server-v${version}/libsql-server-${architecture}-${platform}.tar.xz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
